@@ -8,7 +8,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.utilities.cli import LightningCLI
 
 
-class FCN(LightningModule):
+class TriFCN(LightningModule):
     def __init__(self, input_dim, output_dim, hidden_dims, **kwargs):
         self.network
         
@@ -26,8 +26,8 @@ def forward(self, x):
         self.accuracy.reset()
         
     def validation_step(self, batch, batch_idx):
-        x, y = batch["sequence"], batch["reverse_complement"], batch["target"]
-        outs = self(x, x_rev_comp).squeeze(dim=1)
+        x, y = batch[""]
+        outs = self(x)
         val_step_loss = F.binary_cross_entropy_with_logits(outs, y)
         self.log("val_step_loss", val_step_loss)
         

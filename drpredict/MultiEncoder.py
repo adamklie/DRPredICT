@@ -1,21 +1,34 @@
+# Will use pretrained encoder networks as starting point
+
+
 import torch
 from torch import nn
 import torch.nn.functional as F
+import numpy as np
 from pytorch_lightning.core.lightning import LightningModule
 from torch.optim import Adam
 from modules import FullyConnectedModule
 
 
-class VanillaAE(LightningModule):
-    def __init__(self, input_dim, output_dim, hidden_dims=[], encoder_kwargs={}, decoder_kwargs={}):
+class MultiEncoder(LightningModule):
+    def __init__(self, omics, input_dims, output_dims, hidden_dims=[], pretrained=False, encoder_kwargs=[], fcn_kwargs={}):
         super().__init__()
-        self.encoder = FullyConnectedModule(input_dim=input_dim, output_dim=output_dim, hidden_dims=hidden_dims, **encoder_kwargs)
-        self.decoder = FullyConnectedModule(input_dim=output_dim, output_dim=input_dim, hidden_dims=hidden_dims, **decoder_kwargs)
+        self.pretrained = pretrained
+        self.encoders = {}
+        if pretrained:
+            print("TODO!")
+        else:
+            for i in range(len(omics)):
+                self.encoders[omics[i]] = FullyConnectedModule(input_dim=input_dims[i], output_dim=output_dims[i], hidden_dims=hidden_dims[i], **encoder_kwargs[i])
+        self.encoding_len = np.sum(output_dims)
+        self.fcn = FullyConnectedModule(input_dim=self.encoding_len, **fcn_kwargs)
 
     def forward(self, x):
-        z = self.encoder(x)
-        x_hat = self.decoder(z)
-        return x_hat
+        encoder_outs = {}
+        for encoder in self.encoders:
+            omic = encoder
+            encoder_outs = encoder
+        
 
     def training_step(self, batch, batch_idx):
         return self._common_step(batch, batch_idx, "train")
@@ -28,7 +41,7 @@ class VanillaAE(LightningModule):
 
     def predict_step(self, batch, batch_idx, dataloader_idx=None):
         x = self._prepare_batch(batch)
-        return self.encoder(x)
+        return self(x)
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)

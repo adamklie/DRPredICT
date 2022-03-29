@@ -5,7 +5,7 @@ from torchvision import transforms
 #from transforms import TODO add potential transforms
 #from load_data import load
 
-class MultiomicDataset(pl.LightningDataModule):
+class MultiomicDataModule(pl.LightningDataModule):
     def __init__(self, file: str, batch_size: int = 32, num_workers: int = 0, transforms=None, split=0.9):
         super().__init__()
         self.file = file
