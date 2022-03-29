@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from pytorch_lightning.core.lightning import LightningModule
 from torch.optim import Adam
 from modules import FullyConnectedModule
+from nn_utils import init_weights
 
 
 class VanillaAE(LightningModule):
@@ -11,7 +12,9 @@ class VanillaAE(LightningModule):
         super().__init__()
         self.encoder = FullyConnectedModule(input_dim=input_dim, output_dim=output_dim, hidden_dims=hidden_dims, **encoder_kwargs)
         self.decoder = FullyConnectedModule(input_dim=output_dim, output_dim=input_dim, hidden_dims=hidden_dims, **decoder_kwargs)
-
+        init_weights(self.encoder)
+        init_weights(self.decoder)
+        
     def forward(self, x):
         z = self.encoder(x)
         x_hat = self.decoder(z)

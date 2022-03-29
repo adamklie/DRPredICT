@@ -40,7 +40,7 @@ class MultiomicDataset(Dataset):
         sample["tissue"] = self.drug_pairs.lineage.loc[idx]
         sample["drug_name"] = self.drug_pairs.Name.loc[idx]
         sample["drug_encoding"] = self.drug_pairs.SMILE.loc[idx]
-        if mutation:
+        if self.mutation:
             sample["mutation"] = torch.Tensor(self.mutation.loc[cell_line])
         if expression:
             sample["expression"] = torch.Tensor(self.expression.loc[cell_line])
