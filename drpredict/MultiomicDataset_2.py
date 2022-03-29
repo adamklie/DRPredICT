@@ -14,13 +14,13 @@ class MultiomicDataset(Dataset):
         """
         self.file_ext = file_ext
         if mutation:
-            self.mutation = pd.read_csv("%s_mutation.tsv" % (file_ext), index_col=0)
+            self.mutation = pd.read_table("%s_mutations.tsv" % (file_ext), index_col=0)
         if expression:
-            self.expression = pd.read_csv("%s_expression.tsv" % (file_ext), index_col=0)
+            self.expression = pd.read_table("%s_expression.tsv" % (file_ext), index_col=0)
         if cn:
-            self.cn = pd.read_csv("%s_cn.tsv" % (file_ext), index_col=0)
-        temp = pd.read_csv("%s_labels.tsv" % (file_ext), index_col=0)
-        self.drug_pairs = temp[['']]
+            self.cn = pd.read_table("%s_cn.tsv" % (file_ext), index_col=0)
+        self.drug_pairs = pd.read_table("%s_labels.tsv" % (file_ext))
+        
         #TODO read in multiomic files
         # Read in each multiomic file specified
         
@@ -32,13 +32,20 @@ class MultiomicDataset(Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist()
         
+        # Extract cell line name from cell line - drug pairs
+        cell_line = self.drug_pairs.CCLE_Name.loc[idx]
+        
         sample = {}
+        sample["name"] = cell_line
+        sample["tissue"] = self.drug_pairs.lineage.loc[idx]
+        sample["drug_name"] = self.drug_pairs.Name.loc[idx]
+        sample["drug_encoding"] = self.drug_pairs.SMILE.loc[idx]
         if mutation:
-            sample["mutation"] = self.mutation[idx]
+            sample["mutation"] = torch.Tensor(self.mutation.loc[cell_line])
         if expression:
-            sample["expression"] = self.expression[idx]
+            sample["expression"] = torch.Tensor(self.expression.loc[cell_line])
         if cn:
-            sample["cn"] = self.cn[idx]
+            sample["cn"] = torch.Tensor(self.cn.loc[cell_line])
         
         #sample = {"sequence": seq, "target": target}
         

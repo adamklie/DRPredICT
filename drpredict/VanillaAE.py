@@ -27,7 +27,7 @@ class VanillaAE(LightningModule):
         self._common_step(batch, batch_idx, "test")
 
     def predict_step(self, batch, batch_idx, dataloader_idx=None):
-        x = self._prepare_batch(batch)
+        x = batch[0]
         return self.encoder(x)
 
     def configure_optimizers(self):
@@ -39,7 +39,7 @@ class VanillaAE(LightningModule):
         return x.view(x.size(0), -1)
 
     def _common_step(self, batch, batch_idx, stage: str):
-        x = self._prepare_batch(batch)
+        x = batch[0]
         loss = F.mse_loss(x, self(x))
         self.log(f"{stage}_loss", loss, on_step=True)
         return loss

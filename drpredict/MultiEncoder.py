@@ -14,7 +14,7 @@ class MultiEncoder(LightningModule):
     def __init__(self, omics, input_dims, output_dims, hidden_dims=[], pretrained=False, encoder_kwargs=[], fcn_kwargs={}):
         super().__init__()
         self.pretrained = pretrained
-        self.encoders = {}
+        self.encoders = nn.ModuleDict()
         if pretrained:
             print("TODO!")
         else:
@@ -24,11 +24,14 @@ class MultiEncoder(LightningModule):
         self.fcn = FullyConnectedModule(input_dim=self.encoding_len, **fcn_kwargs)
 
     def forward(self, x):
-        encoder_outs = {}
-        for encoder in self.encoders:
-            omic = encoder
-            encoder_outs = encoder
-        
+        # TODODODODODOD Need to change this to pull out correct data for each encoder
+        encoder_outs = []
+        for i, omic in enumerate(self.encoders.keys()):
+            encoder = self.encoders[omic]
+            encoder_outs.append(encoder(x[i]))
+        out = torch.cat(encoder_outs, dim=1)
+        out = self.fcn(out)
+        return out
 
     def training_step(self, batch, batch_idx):
         return self._common_step(batch, batch_idx, "train")
@@ -47,12 +50,7 @@ class MultiEncoder(LightningModule):
         optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
         return optimizer
 
-    def _prepare_batch(self, batch):
-        x, _ = batch
-        return x.view(x.size(0), -1)
-
     def _common_step(self, batch, batch_idx, stage: str):
-        x = self._prepare_batch(batch)
         loss = F.mse_loss(x, self(x))
         self.log(f"{stage}_loss", loss, on_step=True)
         return loss
