@@ -6,17 +6,17 @@ from torchvision import transforms
 #from load_data import load
 
 class MultiomicDataModule(pl.LightningDataModule):
-    def __init__(self, file: str, batch_size: int = 32, num_workers: int = 0, transforms=None, split=0.9):
+    def __init__(self, file_ext: str, batch_size: int = 32, num_workers: int = 0, split=0.9, dataset_kwargs={}):
         super().__init__()
-        self.file = file
+        self.file_ext = file_ext
         self.batch_size = batch_size
         self.transforms = transforms
-        self.load_kwargs = load_kwargs
         self.num_workers = num_workers
+        self.dataset_kwargs = **dataset_kwargs
         
     def setup(self, stage: str = None) -> None:
         #TODO: load file
-        dataset = MultiomicDataset()
+        dataset = MultiomicDataset(self.file_ext, self.dataset_kwargs)
         
         # TODO make for train, val and test split
         dataset_len = len(dataset)
