@@ -7,7 +7,7 @@ from torch.utils.data import Dataset
 class MultiomicDataset(Dataset):
     """MultiomicDataset definition"""
     
-    def __init__(self, file_ext, mutation=True, expression=True, cn=True):
+    def __init__(self, file_ext, drug=False, mutation=False, expression=False, cn=False):
         """
         Args:
             file_ext (string): 
@@ -19,30 +19,44 @@ class MultiomicDataset(Dataset):
             self.expression = pd.read_table("%s_expression.tsv" % (file_ext), index_col=0)
         if cn:
             self.cn = pd.read_table("%s_cn.tsv" % (file_ext), index_col=0)
-        self.drug_pairs = pd.read_table("%s_labels.tsv" % (file_ext), low_memory=False)
+            
+        if drug:
+            self.drug_pairs = pd.read_table("%s_labels.tsv" % (file_ext), low_memory=False)
         
         #self.genes = {}
         
-        #TODO read in multiomic files
-        # Read in each multiomic file specified
-        
     def __len__(self):
-        return len(self.drug_pairs)
+        if "drug_pairs" in self.__dict__:
+            return len(self.drug_pairs)
+        else:
+            if "mutation" in self.__dict__:
+                return len(self.mutation)
+            elif "expression" in self.__dict__:
+                return len(self.expression)
+            elif "cn" in self.__dict__:
+                return len(self.cn)
     
     def __getitem__(self, idx):
         # Create a dictionary of different multiomic data slices (e.g. {"mutations": mut, "expression": exp...})
         if torch.is_tensor(idx):
             idx = idx.tolist()
         
-        # Extract cell line name from cell line - drug pairs
-        cell_line = self.drug_pairs.CCLE_Name.loc[idx]
-        
         sample = {}
+        if "drug_pairs" in self.__dict__:
+            sample["drug_name"] = self.drug_pairs.Name.loc[idx]
+            sample["drug_encoding"] = self.drug_pairs.SMILE.loc[idx]
+            sample["auc"] = torch.Tensor([self.drug_pairs.auc[idx]])
+            sample["tissue"] = self.drug_pairs.lineage.loc[idx]
+            cell_line = self.drug_pairs.CCLE_Name.loc[idx]
+        else:
+            if "mutation" in self.__dict__:
+                cell_line = self.mutation.index[idx]
+            elif "expression" in self.__dict__:
+                cell_line = self.expression.index[idx]
+            elif "cn" in self.__dict__:
+                cell_line = self.cn.index[idx]
+
         sample["name"] = cell_line
-        sample["tissue"] = self.drug_pairs.lineage.loc[idx]
-        sample["drug_name"] = self.drug_pairs.Name.loc[idx]
-        sample["drug_encoding"] = self.drug_pairs.SMILE.loc[idx]
-        sample["auc"] = self.drug_pairs.auc[idx]
         
         if "mutation" in self.__dict__:
             sample["mutation"] = torch.Tensor(self.mutation.loc[cell_line])
@@ -50,11 +64,6 @@ class MultiomicDataset(Dataset):
             sample["expression"] = torch.Tensor(self.expression.loc[cell_line])
         if "cn" in self.__dict__:
             sample["cn"] = torch.Tensor(self.cn.loc[cell_line])
-        
-        #sample = {"sequence": seq, "target": target}
-        
-        # TODOD apply transforms to the sample if desired
-#         if self.transform:
-#             sample = self.transform(sample)
+
         return sample
     
