@@ -11,6 +11,7 @@ from nn_utils import init_weights
 class MultiEncoder(LightningModule):
     def __init__(self, omics, input_dims, output_dims, hidden_dims=[], pretrained=False, encoder_kwargs=[], fcn_kwargs={}):
         super().__init__()
+        self.omics = omics
         self.pretrained = pretrained
         self.encoders = nn.ModuleDict()
         if pretrained:
@@ -24,11 +25,10 @@ class MultiEncoder(LightningModule):
         init_weights(self.fcn)
 
     def forward(self, x):
-        # TODODODODODOD Need to change this to pull out correct data for each encoder
         encoder_outs = []
         for i, omic in enumerate(self.encoders.keys()):
             encoder = self.encoders[omic]
-            encoder_outs.append(encoder(x[i]))
+            encoder_outs.append(encoder(x[omic]))
         out = torch.cat(encoder_outs, dim=1)
         out = self.fcn(out)
         return out
@@ -47,7 +47,7 @@ class MultiEncoder(LightningModule):
         return optimizer
 
     def _common_step(self, batch, batch_idx, stage: str):
-        x, y = batch[0:-1], batch[-1]
+        x, y = batch, batch["auc"]
         preds = self(x).squeeze(dim=1)
         loss = F.mse_loss(y, preds)
         self.log(f"{stage}_loss", loss, on_step=True)

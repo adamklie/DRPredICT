@@ -1,5 +1,6 @@
 # User-defined
-test/random_test
+test/*test
+data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
