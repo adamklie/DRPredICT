@@ -1,0 +1,17 @@
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/accelerators/accelerator.py:435: LightningDeprecationWarning: `Accelerator.broadcast` is deprecated in v1.5 and will be removed in v1.6. `Broadcast` logic is implemented directly in the `TrainingTypePlugin` implementations.
+  "`Accelerator.broadcast` is deprecated in v1.5 and will be removed in v1.6. "
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Set SLURM handle signals.
+
+  | Name     | Type                 | Params
+--------------------------------------------------
+0 | encoders | ModuleDict           | 3.6 M 
+1 | fcn      | FullyConnectedModule | 148 K 
+--------------------------------------------------
+3.7 M     Trainable params
+0         Non-trainable params
+3.7 M     Total params
+14.809    Total estimated model params size (MB)

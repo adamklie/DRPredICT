@@ -1,0 +1,4 @@
+Wed Mar 30 09:49:07 PDT 2022
+Job ID: 1103158
+python ../drpredict/MultiEncoder.py fit --config ../config/biomic_cn_drug.yml
+Wed Mar 30 09:49:51 PDT 2022

@@ -1,0 +1,4 @@
+Wed Mar 30 13:31:10 PDT 2022
+Job ID: 1103249
+python ../drpredict/MultiEncoder.py fit --seed_everything 13 --config ../config/triomic_exp_cn_drug.yml
+Wed Mar 30 13:31:30 PDT 2022

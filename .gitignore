@@ -1,5 +1,7 @@
 # User-defined
-test/*test
+fit/
+test/*test*
+test/*logs*
 data/
 
 # Byte-compiled / optimized / DLL files

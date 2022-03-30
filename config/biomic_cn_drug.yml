@@ -1,0 +1,31 @@
+trainer:
+  logger:
+    class_path: pytorch_lightning.loggers.TensorBoardLogger
+    init_args:
+      save_dir: "../fit/biomic"
+      name: "cn_drug"
+      version: 1
+  gpus: 1
+  max_epochs: 10
+model:
+  omics: ["cn", "drug_encoding"]
+  input_dims: [2000, 2048]
+  output_dims: [64, 64]
+  hidden_dims: [[512, 256, 64], [512, 256, 64]]
+  pretrained: false
+  encoder_kwargs: [{"dropout_rate": 0.2}, {"dropout_rate": 0.2}]
+  fcn_kwargs:
+    dropout_rate: 0.2
+    hidden_dims: [128, 128, 128, 128]
+    output_dim: 1
+data:
+  file_ext: "/cellar/users/aklie/projects/DRPredICT/data/training_top2000"
+  batch_size: 512
+  num_workers: 4
+  split: 0.9
+  subset: True
+  dataset_kwargs:
+    drug: True
+    mutation: False
+    expression: False
+    cn: True

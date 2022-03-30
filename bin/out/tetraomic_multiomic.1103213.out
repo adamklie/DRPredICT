@@ -1,0 +1,4 @@
+Wed Mar 30 10:44:44 PDT 2022
+Job ID: 1103213
+python ../drpredict/MultiEncoder.py fit --config ../config/tetraomic_multiomic.yml
+Wed Mar 30 10:44:46 PDT 2022

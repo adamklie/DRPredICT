@@ -1,3 +1,4 @@
+import os
 import torch
 from torch import nn
 import torch.nn.functional as F
@@ -6,6 +7,8 @@ from pytorch_lightning.core.lightning import LightningModule
 from torch.optim import Adam
 from modules import FullyConnectedModule
 from nn_utils import init_weights
+from MultiomicDataModule import MultiomicDataModule
+from pytorch_lightning.utilities.cli import LightningCLI
 
 
 class MultiEncoder(LightningModule):
@@ -23,6 +26,7 @@ class MultiEncoder(LightningModule):
         self.encoding_len = np.sum(output_dims)
         self.fcn = FullyConnectedModule(input_dim=self.encoding_len, **fcn_kwargs)
         init_weights(self.fcn)
+        self.save_hyperparameters()
 
     def forward(self, x):
         encoder_outs = []
@@ -41,6 +45,12 @@ class MultiEncoder(LightningModule):
 
     def test_step(self, batch, batch_idx):
         self._common_step(batch, batch_idx, "test")
+        
+    def predict_step(self, batch, batch_idx):
+        x, y = batch, batch["auc"]
+        self.eval()
+        pred = self(x)
+        return pred, y
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
@@ -52,3 +62,21 @@ class MultiEncoder(LightningModule):
         loss = F.mse_loss(y, preds)
         self.log(f"{stage}_loss", loss, on_step=True)
         return loss
+
+from pytorch_lightning.callbacks import BasePredictionWriter
+
+class PredictionWriter(BasePredictionWriter):
+
+    def __init__(self, output_dir: str, write_interval: str):
+        super().__init__(write_interval)
+        self.output_dir = output_dir
+
+    def write_on_batch_end(self, trainer, pl_module: 'LightningModule', prediction, batch_indices, batch, batch_idx: int, dataloader_idx: int):
+        torch.save(prediction, os.path.join(self.output_dir, dataloader_idx, "{}_predictions.pt".format(str(batch_idx))))
+        torch.save(batch["auc"], os.path.join(self.output_dir, dataloader_idx, "{}_auc.pt".format(str(batch_idx))))
+
+    def write_on_epoch_end(self, trainer, pl_module: 'LightningModule', predictions, batch_indices):
+        torch.save(predictions, os.path.join(self.output_dir, "predictions.pt"))
+    
+if __name__ == "__main__":
+    cli = LightningCLI(MultiEncoder, MultiomicDataModule)

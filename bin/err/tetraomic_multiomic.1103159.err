@@ -1,0 +1,102 @@
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/accelerators/accelerator.py:435: LightningDeprecationWarning: `Accelerator.broadcast` is deprecated in v1.5 and will be removed in v1.6. `Broadcast` logic is implemented directly in the `TrainingTypePlugin` implementations.
+  "`Accelerator.broadcast` is deprecated in v1.5 and will be removed in v1.6. "
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Set SLURM handle signals.
+
+  | Name     | Type                 | Params
+--------------------------------------------------
+0 | encoders | ModuleDict           | 4.7 M 
+1 | fcn      | FullyConnectedModule | 263 K 
+--------------------------------------------------
+5.0 M     Trainable params
+0         Non-trainable params
+5.0 M     Total params
+19.975    Total estimated model params size (MB)
+slurmstepd: error: *** JOB 1103159 ON carter-gpu-01 CANCELLED AT 2022-03-30T10:31:17 ***
+bypassing sigterm
+Traceback (most recent call last):
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/threading.py", line 300, in wait
+    gotit = waiter.acquire(True, timeout)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/torch/utils/data/_utils/signal_handling.py", line 66, in handler
+    _error_if_any_worker_fails()
+RuntimeError: DataLoader worker (pid 2991357) is killed by signal: Terminated. 
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/queue.py", line 179, in get
+    self.not_empty.wait(remaining)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/threading.py", line 300, in wait
+    gotit = waiter.acquire(True, timeout)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/torch/utils/data/_utils/signal_handling.py", line 66, in handler
+    _error_if_any_worker_fails()
+RuntimeError: DataLoader worker (pid 2992921) is killed by signal: Terminated. 
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1011, in _try_get_data
+    data = self._data_queue.get(timeout=timeout)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/queue.py", line 182, in get
+    return item
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/threading.py", line 244, in __exit__
+    return self._lock.__exit__(*args)
+RuntimeError: release unlocked lock
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "../drpredict/MultiEncoder.py", line 60, in <module>
+    cli = LightningCLI(MultiEncoder, MultiomicDataModule)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/utilities/cli.py", line 528, in __init__
+    self._run_subcommand(self.subcommand)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/utilities/cli.py", line 783, in _run_subcommand
+    fn(**fn_kwargs)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/trainer.py", line 741, in fit
+    self._fit_impl, model, train_dataloaders, val_dataloaders, datamodule, ckpt_path
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/trainer.py", line 685, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/trainer.py", line 777, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/trainer.py", line 1199, in _run
+    self._dispatch()
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/trainer.py", line 1279, in _dispatch
+    self.training_type_plugin.start_training(self)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/plugins/training_type/training_type_plugin.py", line 202, in start_training
+    self._results = trainer.run_stage()
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/trainer.py", line 1289, in run_stage
+    return self._run_train()
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/trainer.py", line 1319, in _run_train
+    self.fit_loop.run()
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/loops/base.py", line 145, in run
+    self.advance(*args, **kwargs)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/loops/fit_loop.py", line 234, in advance
+    self.epoch_loop.run(data_fetcher)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/loops/base.py", line 145, in run
+    self.advance(*args, **kwargs)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/loops/epoch/training_epoch_loop.py", line 156, in advance
+    batch_idx, (batch, self.batch_progress.is_last_batch) = next(self._dataloader_iter)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/utilities/fetching.py", line 203, in __next__
+    return self.fetching_function()
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/utilities/fetching.py", line 270, in fetching_function
+    self._fetch_next_batch()
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/utilities/fetching.py", line 300, in _fetch_next_batch
+    batch = next(self.dataloader_iter)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/supporters.py", line 550, in __next__
+    return self.request_next_batch(self.loader_iters)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/supporters.py", line 562, in request_next_batch
+    return apply_to_collection(loader_iters, Iterator, next)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/utilities/apply_func.py", line 96, in apply_to_collection
+    return function(data, *args, **kwargs)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 530, in __next__
+    data = self._next_data()
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1207, in _next_data
+    idx, data = self._get_data()
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1163, in _get_data
+    success, data = self._try_get_data()
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1024, in _try_get_data
+    raise RuntimeError('DataLoader worker (pid(s) {}) exited unexpectedly'.format(pids_str)) from e
+RuntimeError: DataLoader worker (pid(s) 2992921, 2992922, 2992923, 2992924) exited unexpectedly

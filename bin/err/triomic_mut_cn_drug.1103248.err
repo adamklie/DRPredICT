@@ -1,0 +1,29 @@
+GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/accelerators/accelerator.py:435: LightningDeprecationWarning: `Accelerator.broadcast` is deprecated in v1.5 and will be removed in v1.6. `Broadcast` logic is implemented directly in the `TrainingTypePlugin` implementations.
+  "`Accelerator.broadcast` is deprecated in v1.5 and will be removed in v1.6. "
+Traceback (most recent call last):
+  File "../drpredict/MultiEncoder.py", line 82, in <module>
+    cli = LightningCLI(MultiEncoder, MultiomicDataModule)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/utilities/cli.py", line 528, in __init__
+    self._run_subcommand(self.subcommand)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/utilities/cli.py", line 783, in _run_subcommand
+    fn(**fn_kwargs)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/trainer.py", line 741, in fit
+    self._fit_impl, model, train_dataloaders, val_dataloaders, datamodule, ckpt_path
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/trainer.py", line 685, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/trainer.py", line 777, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/trainer.py", line 1138, in _run
+    self._call_setup_hook()  # allow user to setup lightning_module in accelerator environment
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/trainer.py", line 1439, in _call_setup_hook
+    self.call_hook("setup", stage=fn)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/trainer.py", line 1495, in call_hook
+    callback_fx(*args, **kwargs)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/trainer/callback_hook.py", line 48, in setup
+    callback.setup(self, self.lightning_module, stage=stage)
+  File "/cellar/users/aklie/opt/miniconda3/envs/pytorch_dev2/lib/python3.7/site-packages/pytorch_lightning/utilities/cli.py", line 410, in setup
+    f"{self.__class__.__name__} expected {config_path} to NOT exist. Aborting to avoid overwriting"
+RuntimeError: SaveConfigCallback expected ../fit/triomic/mut_cn_drug/version_0/config.yaml to NOT exist. Aborting to avoid overwriting results of a previous run. You can delete the previous config file, set `LightningCLI(save_config_callback=None)` to disable config saving, or set `LightningCLI(save_config_overwrite=True)` to overwrite the config file.
