@@ -48,7 +48,7 @@ class MultiEncoder(LightningModule):
 
     def _common_step(self, batch, batch_idx, stage: str):
         x, y = batch, batch["auc"]
-        preds = self(x).squeeze(dim=1)
+        preds = self(x)
         loss = F.mse_loss(y, preds)
         self.log(f"{stage}_loss", loss, on_step=True)
         return loss
