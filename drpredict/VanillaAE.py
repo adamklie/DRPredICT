@@ -4,18 +4,28 @@ import torch.nn.functional as F
 from pytorch_lightning.core.lightning import LightningModule
 from torch.optim import Adam
 from modules import FullyConnectedModule
-from nn_utils import init_weights
 
 
 class VanillaAE(LightningModule):
+    """VanillaAE class definition.
+       Defines a simple and flexible autoencoder Lightning Module.
+       Encoder and decoder are built from fully connected networks (FullyConnectedModule class)
+    """
     def __init__(self, omic_type, input_dim, output_dim, hidden_dims=[], encoder_kwargs={}, decoder_kwargs={}):
+        """
+        Args:
+            omic_type (str): defines the omic type to include e.g. "mutation"
+            input_dim (int): The input dimensions of each encoder to train, e.g. 2000
+            output_dims (int): The output dimensions of each encoder to train, e.g. 50
+            hidden_dims (list like): The hidden dims for both the encoder and decoder, e.g. [2000, 2000, 2048]
+            encoder_kwargs (dict): Dictionary defining keyword arguments to be passed to the encoder
+            decoder_kwargs (dict): Dictionary defining keyword arguments to be passed to the decoder
+        """
         super().__init__()
         self.omic_type = omic_type
         self.encoder = FullyConnectedModule(input_dim=input_dim, output_dim=output_dim, hidden_dims=hidden_dims, **encoder_kwargs)
         self.decoder = FullyConnectedModule(input_dim=output_dim, output_dim=input_dim, hidden_dims=hidden_dims, **decoder_kwargs)
-        init_weights(self.encoder)
-        init_weights(self.decoder)
-        
+
     def forward(self, x):
         z = self.encoder(x)
         x_hat = self.decoder(z)

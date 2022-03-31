@@ -5,13 +5,20 @@ from torch.utils.data import Dataset
 from rdkit.Chem import AllChem
 from rdkit.Chem import DataStructs
 
+
 class MultiomicDataset(Dataset):
     """MultiomicDataset definition"""
+    """Extension of MultiomicDataset class for handling single molecule input. Was mainly used for handling ICB test data for Carter Lab Hackathon"""
     
     def __init__(self, file_ext, drug=False, mutation=False, expression=False, cn=False, drug_encoding=None):
         """
         Args:
-            file_ext (string): 
+            file_ext (string): PATH for the input files for drug, mutation, expression or copy number variation datasets (needs to be in this format: <PATH>_dataset_name.tsv)
+            drug (boolean, optional): whether cell line-drug data will be included in the training or not
+            mutation (boolean, optional): whether mutation data will be included in the training or not
+            expression (boolean, optional): whether expression data will be included in the training or not
+            cn (boolean, optional): whether copy number variation data will be included in the training or not
+            drug_encoding (str, optional): path to a file containing comma separated encoding of a single molecule's Morgan fingerprint on first line (no header)
         """
         self.file_ext = file_ext
         if mutation:
@@ -66,7 +73,7 @@ class MultiomicDataset(Dataset):
                 cell_line = self.expression.index[idx]
             elif "cn" in self.__dict__:
                 cell_line = self.cn.index[idx]  
-        print(cell_line)
+
         if "mutation" in self.__dict__:
             sample["mutation"] = torch.Tensor(self.mutation.loc[cell_line])
         if "expression" in self.__dict__:
