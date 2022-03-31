@@ -23,7 +23,7 @@ data:
   batch_size: 512
   num_workers: 4
   split: 0.9
-  subset: True
+  subset: False
   dataset_kwargs:
     drug: True
     mutation: False

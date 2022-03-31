@@ -3,6 +3,8 @@ fit/
 test/*test*
 test/*logs*
 data/
+bin/err/
+bin/out/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
