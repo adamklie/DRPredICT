@@ -27,10 +27,9 @@ source activate <ENV>
 
 ## Directory organization
 
-- bin: 
-- config: config files
-- data:
-- drpredict:
-- fit:
-- notebooks:
-- test:
+- `bin`: contains slurm executable scripts for running running jobs (e.g. training models) on a high performance compute cluster
+- `config`: config files that instantiate a task to be performed by a model (e.g. fit)
+- `drpredict`: python scripts defining DRPredICT models and model procedures (e.g. fitting)
+- `notebooks`: notebooks for data cleaning or analzing/evaluating results
+- `tb_logs`: TensorBoard log files subdivided into different procedures (e.g fit)
+- `test`: notebooks for testing DRPredICT functionality
